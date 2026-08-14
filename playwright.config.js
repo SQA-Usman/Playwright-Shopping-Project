@@ -14,26 +14,30 @@ import { defineConfig, devices } from '@playwright/test';
  */
 const config = ({
   testDir: './tests',
-  timeout: 40 *1000,
-  expect : {
-    timeout: 40 *1000
+  timeout: 40 * 1000,
+  expect: {
+    timeout: 40 * 1000
   },
 
   reporter: [
     ['html', { open: 'always' }],
     ['list']
   ],
-  
-  use: {
-    browserName: 'chromium',
-    headless : false,
-    screenshot : 'only-on-failure',
-    trace : 'on',
-    video: 'on-first-retry',
+  projects: [
+    {
+    use: {
 
-   
-  }
+      name: 'chromium',
+      headless: false,
+      screenshot: 'only-on-failure',
+      trace: 'on',
+      video: 'on-first-retry',
+
+
+    }
+    }
+]
   
 });
-module.exports = config 
 
+module.exports = config 

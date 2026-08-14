@@ -5,7 +5,7 @@ import { Dashboard } from '../PageObject/dashboard'
 import { CardPage } from '../PageObject/cardPage'
 import { checkoutpage } from '../PageObject/checkout'
 import { OrdersPage } from '../PageObject/orderHistroyPage'
-const loginTestData = JSON.parse(JSON.stringify(require('../utils/logintestData.json')))
+const loginTestData = JSON.parse(JSON.stringify(require('../utils/loginTestData.json')))
 const registerTestData = JSON.parse(JSON.stringify(require('../utils/RegisterTestData.json')))
 
 test('User Registration', async ({ page }) => {

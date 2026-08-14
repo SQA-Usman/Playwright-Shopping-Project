@@ -11,7 +11,7 @@ test('Test hide/unhide element' , async ({page}) => {
     await expect(page.locator('#displayed-text')).toBeHidden()
 })
 
-test.only('Test popup' , async({page}) => {
+test('Test popup' , async({page}) => {
     await page.goto('https://rahulshettyacademy.com/AutomationPractice/')
     // Click on confirm dialog and ok it
     await page.on('dialog' , async(dialog) => {
@@ -25,7 +25,6 @@ test.only('Test popup' , async({page}) => {
     // await page.locator('#confirmbtn').click()
 
     // Handle hover action
-    await page.pause()
     await page.locator('#mousehover').hover()
 
     
