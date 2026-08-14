@@ -1,5 +1,5 @@
 import { test, expect, request } from "@playwright/test"
-import { APIUtils } from "./utils/apiutils"
+import { APIUtils } from "../utils/apiutils"
 
 let token
 let orderId

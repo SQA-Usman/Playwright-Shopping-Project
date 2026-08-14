@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { platform } from "node:os";
 
 test.describe('checkoutflow', () => {
 
@@ -9,8 +8,8 @@ test.describe('checkoutflow', () => {
         await page.locator('.text-reset').click()
         await page.locator('#firstName').fill('Test')
         await page.locator('#lastName').fill('User')
-        await page.locator('#userEmail').fill('testuser20911@gmail.com')
-        await page.locator('#userMobile').fill("1578601298")
+        await page.locator('#userEmail').fill(`testuser${Math.floor(Math.random()*1000)}@gmail.com`)
+        await page.locator('#userMobile').fill(`${Math.floor(1000000000 + Math.random() * 9000000000)}`)
         await page.locator('[formcontrolname="occupation"]').selectOption('Engineer')
         await page.locator('[formcontrolname="gender"]').first().click()
         await page.locator('#userPassword').fill('Abc@123456')
@@ -21,7 +20,7 @@ test.describe('checkoutflow', () => {
         await registerButton.click()
         await expect(page.getByText('Account Created Successfully')).toBeVisible()
     })
-    test.only('Checkout with product', async ({ page }) => {
+    test('Checkout with product', async ({ page }) => {
         await page.goto('https://rahulshettyacademy.com/client/#/auth/login')
         await page.locator('#userEmail').fill('testuser20911@gmail.com')
         await page.locator('#userPassword').fill('Abc@123456')
@@ -94,17 +93,18 @@ test.describe('checkoutflow', () => {
         await page.getByText('Place Order ').click()
         // Validate order is completed
         await expect(page.getByText(' Thankyou for the order. ')).toBeVisible()
-        const orderId = await page.locator('.em-spacer-1 .ng-star-inserted').textContent()
+        const orderId = (await page.locator('.em-spacer-1 .ng-star-inserted').textContent()).replace(/\|/g, '').trim()
         console.log(orderId)
 
         // Navigate to Orders
         await page.locator('button[routerlink="/dashboard/myorders"]').click()
         await expect(page.getByText('Your Orders')).toBeVisible()
         // Validate order Id
-        const totalOrders = await page.locator('tbody tr')
-        for (let i = 0; i < totalOrders.count(); ++i) {
-            const rowOrderId = await totalOrders.nth(i).locator('th').textContent()
-            if (orderId.includes(rowOrderId)) {
+        const totalOrders =  page.locator('tbody tr')
+        for (let i = 0; i < await totalOrders.count(); ++i) {
+            const rowOrderId = (await totalOrders.nth(i).locator('th').textContent()).trim()
+            console.log(rowOrderId)
+            if (rowOrderId ===orderId) {
                 await totalOrders.nth(i).locator('button').first().click()
                 break;
             }

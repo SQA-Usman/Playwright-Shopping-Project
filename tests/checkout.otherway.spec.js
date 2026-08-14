@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { platform } from "node:os";
 
 test.describe('checkoutflow', () => {
 
