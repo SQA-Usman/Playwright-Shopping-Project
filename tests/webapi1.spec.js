@@ -19,10 +19,6 @@ test.beforeAll(async () => {
 })
 
 test('Checkout with product', async ({ page }) => {
-    // await page.goto('https://rahulshettyacademy.com/client/#/auth/login')
-    // await page.locator('#userEmail').fill('testuser20911@gmail.com')
-    // await page.locator('#userPassword').fill('Abc@123456')
-    // await page.locator('#login').click()
     await page.addInitScript(value => {
         window.localStorage.setItem('token', value)
     }, token)

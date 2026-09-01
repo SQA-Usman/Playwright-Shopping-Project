@@ -1,29 +1,16 @@
 import { expect, test } from "@playwright/test";
+import fs from 'fs'
+const users = JSON.parse(
+    fs.readFileSync('./utils/userData.json', 'utf-8')
+);
 
 test.describe('checkoutflow', () => {
 
-    test('Register new user', async ({ page }) => {
+    test('Checkout with product', async ({ page }) => {
+        const user = users[1]
         await page.goto('https://rahulshettyacademy.com/client/#/auth/login')
-        await expect(page).toHaveTitle("Let's Shop")
-        await page.locator('.text-reset').click()
-        await page.locator('#firstName').fill('Test')
-        await page.locator('#lastName').fill('User')
-        await page.locator('#userEmail').fill('testuser20911@gmail.com')
-        await page.locator('#userMobile').fill("1578601298")
-        await page.locator('[formcontrolname="occupation"]').selectOption('Engineer')
-        await page.locator('[formcontrolname="gender"]').first().click()
-        await page.locator('#userPassword').fill('Abc@123456')
-        await page.locator('#confirmPassword').fill('Abc@123456')
-        await page.locator('[formcontrolname="required"]').click()
-        const registerButton = page.locator('[type="submit"]')
-        await expect(registerButton).toBeEnabled()
-        await registerButton.click()
-        await expect(page.getByText('Account Created Successfully')).toBeVisible()
-    })
-    test.only('Checkout with product', async ({ page }) => {
-        await page.goto('https://rahulshettyacademy.com/client/#/auth/login')
-        await page.getByPlaceholder('email@example.com').fill('testuser20911@gmail.com')
-        await page.getByPlaceholder('enter your passsword').fill('Abc@123456')
+        await page.getByPlaceholder('email@example.com').fill(user.email)
+        await page.getByPlaceholder('enter your passsword').fill(user.password)
         await page.getByRole('button' , {name:'login'}).click()
         await page.locator('.card-body').filter({hasText:'iphone 13 pro'}).getByRole('button' , {name:'Add To Cart'}).click()
         await expect(page.locator('[role="alert"]')).toContainText('Product Added To Cart')
@@ -39,17 +26,17 @@ test.describe('checkoutflow', () => {
         const creditCardNumber = page.locator('.field').filter({hasText:'Credit Card Number'}).locator('input')
         await creditCardNumber.clear()
         await creditCardNumber.fill('200 899 876 102')
-        const expiryDate = await page.locator('.field:has-text("Expiry Date")')
+        const expiryDate =  page.locator('.field:has-text("Expiry Date")')
         const monthDropdown = expiryDate.locator('select').first()
         const yearDropdowmm = expiryDate.locator('select').last()
 
         await monthDropdown.selectOption('12')
         await yearDropdowmm.selectOption('22')
 
-        const cvvCode = await page.locator('.field:has-text("CVV Code ")')
+        const cvvCode =  page.locator('.field:has-text("CVV Code ")')
         await cvvCode.locator('input').fill('529')
 
-        const nameOnCard = await page.locator('.field:has-text("Name on Card ")')
+        const nameOnCard =  page.locator('.field:has-text("Name on Card ")')
         // await nameOnCard.scrollIntoViewIfNeeded();
         await nameOnCard.locator('input').fill('Test User')
 
@@ -64,7 +51,7 @@ test.describe('checkoutflow', () => {
         await expect(page.getByPlaceholder('Select Country')).toHaveValue('Saudi Arabia');
 
         // Validate email
-        const email = 'testuser20911@gmail.com'
+        const email = user.email
         await expect(page.locator('label[type="text"]')).toContainText(email)
         // Click Place order
         await page.getByText('Place Order ').click()

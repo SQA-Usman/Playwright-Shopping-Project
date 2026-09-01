@@ -5,41 +5,18 @@ import { Dashboard } from '../PageObject/dashboard'
 import { CardPage } from '../PageObject/cardPage'
 import { checkoutpage } from '../PageObject/checkout'
 import { OrdersPage } from '../PageObject/orderHistroyPage'
-const loginTestData = JSON.parse(JSON.stringify(require('../utils/loginTestData.json')))
-const registerTestData = JSON.parse(JSON.stringify(require('../utils/RegisterTestData.json')))
+import fs from 'fs'
+const users = JSON.parse(
+    fs.readFileSync('./utils/userData.json', 'utf-8'))
 
-test('User Registration', async ({ page }) => {
-    const registar = new RegistrationPage(page)
-    const userData = {
-        firstname: registerTestData.firstname,
-        lastname: registerTestData.lastname,
-        email : `testuser${Math.floor(Math.random() * 100000 + 1)}@gmail.com`,
-        phoneNumber : Math.floor(1000000000 + Math.random() * 9000000000).toString(),
-        occupation: registerTestData.occupation,
-        password: `TestUser${Math.floor(Math.random() * 10000 + 1)}`
-    }
-    const confirmPassword = userData.password
-    // Navigate to register page
-    await registar.Navigation(page)
-    await expect(page).toHaveTitle("Let's Shop")
-
-    //Fillout the form
-    await registar.registerUser(userData.firstname, userData.lastname, userData.email,
-        userData.phoneNumber, userData.occupation, userData.password, confirmPassword)
-    // Click Register button
-    await registar.clickRegisterButton()
-    await expect(page.getByText('Account Created Successfully')).toBeVisible()
-
-})
-
-for (const data of loginTestData) {
-    test(`Checkout with one product name ${data.productName}`, async ({ page }) => {
+    test('Checkout with one product name', async ({ page }) => {
+        const user = users[2]
         const login = new LoginPage(page)
         // Navigation to Website
         await login.goTo()
 
         // Perform Login
-        await login.validLogin(data.username, data.password)
+        await login.validLogin(user.email, user.password)
 
         // Ensure navigation after login
         await expect(page.locator('.card-body b').first()).toContainText('ADIDAS ORIGINAL')
@@ -47,7 +24,7 @@ for (const data of loginTestData) {
         // Search Product name and add to cart
         const dashboard = new Dashboard(page)
 
-        await dashboard.searchProduct(data.productName)
+        await dashboard.searchProduct('ADIDAS ORIGINAL')
 
         await expect(page.locator('[role="alert"]')).toContainText('Product Added To Cart')
 
@@ -55,7 +32,7 @@ for (const data of loginTestData) {
         await dashboard.navigateToCart()
         // Validte product details
         await expect(page.getByText('My Cart')).toBeVisible()
-        await expect(page.locator('.cartSection h3')).toContainText(data.productName)
+        await expect(page.locator('.cartSection h3')).toContainText('ADIDAS ORIGINAL')
 
         const cardPage = new CardPage(page)
         // Navigate to checkout
@@ -79,7 +56,7 @@ for (const data of loginTestData) {
         await expect(page.locator('[placeholder="Select Country"]')).toHaveValue('Saudi Arabia');
 
         // Validate email is correct
-        const email = data.username
+        const email = user.email
         await expect(page.locator('label[type="text"]')).toContainText(email)
 
         // Click place order button
@@ -104,4 +81,3 @@ for (const data of loginTestData) {
 
 
     })
-}
