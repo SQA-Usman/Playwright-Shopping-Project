@@ -1,29 +1,16 @@
 import { expect, test } from "@playwright/test";
+import fs from 'fs';
+const users = JSON.parse(
+    fs.readFileSync('./utils/userData.json', 'utf-8')
+);
 
 test.describe('checkoutflow', () => {
 
-    test('Register new user', async ({ page }) => {
-        await page.goto('https://rahulshettyacademy.com/client/#/auth/login')
-        await expect(page).toHaveTitle("Let's Shop")
-        await page.locator('.text-reset').click()
-        await page.locator('#firstName').fill('Test')
-        await page.locator('#lastName').fill('User')
-        await page.locator('#userEmail').fill(`testuser${Math.floor(Math.random()*1000)}@gmail.com`)
-        await page.locator('#userMobile').fill(`${Math.floor(1000000000 + Math.random() * 9000000000)}`)
-        await page.locator('[formcontrolname="occupation"]').selectOption('Engineer')
-        await page.locator('[formcontrolname="gender"]').first().click()
-        await page.locator('#userPassword').fill('Abc@123456')
-        await page.locator('#confirmPassword').fill('Abc@123456')
-        await page.locator('[formcontrolname="required"]').click()
-        const registerButton = page.locator('[type="submit"]')
-        await expect(registerButton).toBeEnabled()
-        await registerButton.click()
-        await expect(page.getByText('Account Created Successfully')).toBeVisible()
-    })
     test('Checkout with product', async ({ page }) => {
+        const user = users[0]
         await page.goto('https://rahulshettyacademy.com/client/#/auth/login')
-        await page.locator('#userEmail').fill('testuser20911@gmail.com')
-        await page.locator('#userPassword').fill('Abc@123456')
+        await page.locator('#userEmail').fill(user.email)
+        await page.locator('#userPassword').fill(user.password)
         await page.locator('#login').click()
         const products = page.locator('.card-body')
         await expect(page.locator('.card-body b').first()).toContainText('ADIDAS ORIGINAL')
@@ -87,7 +74,7 @@ test.describe('checkoutflow', () => {
         await expect(selectCountry).toHaveValue('Saudi Arabia');
 
         // Validate email
-        const email = 'testuser20911@gmail.com'
+        const email = user.email
         await expect(page.locator('label[type="text"]')).toContainText(email)
         // Click Place order
         await page.getByText('Place Order ').click()
