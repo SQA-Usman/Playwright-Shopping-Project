@@ -78,6 +78,6 @@ const users = JSON.parse(
         await expect(page.getByText(' order summary ')).toBeVisible()
         await expect(await ordersPage.verifyOrder()).toContain(orderId)
 
-
+        // Testing Jenkins automatic trigger
 
     })
