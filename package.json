@@ -1,11 +1,23 @@
 {
-  "name": "playwrightautomation",
+  "name": "playwright-shopping-project",
   "version": "1.0.0",
-  "description": "",
+  "description": "Playwright end-to-end test automation framework for an e-commerce application using JavaScript and Page Object Model.",
   "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "qa",
+    "testing",
+    "ecommerce",
+    "javascript"
+  ],
+  "author": "Muhammad Usman Saleem",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
