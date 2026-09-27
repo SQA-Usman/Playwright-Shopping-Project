@@ -1,17 +1,8 @@
-import { expect, test } from "@playwright/test";
-import fs from 'fs';
-const users = JSON.parse(
-    fs.readFileSync('./utils/userData.json', 'utf-8')
-);
+import { expect, test } from "../utils/fixtures";
 
 test.describe('checkoutflow', () => {
 
-    test('Checkout with product', async ({ page }) => {
-        const user = users[0]
-        await page.goto('https://rahulshettyacademy.com/client/#/auth/login')
-        await page.locator('#userEmail').fill(user.email)
-        await page.locator('#userPassword').fill(user.password)
-        await page.locator('#login').click()
+    test('Checkout with product', async ({ page, login, user }) => {
         const products = page.locator('.card-body')
         await expect(page.locator('.card-body b').first()).toContainText('ADIDAS ORIGINAL')
 

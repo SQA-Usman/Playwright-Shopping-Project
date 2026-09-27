@@ -1,21 +1,12 @@
-import { test, expect } from '@playwright/test'
-import { LoginPage } from '../PageObject/loginpage'
+import { test, expect } from '../utils/fixtures'
 import { Dashboard } from '../PageObject/dashboard'
 import { CardPage } from '../PageObject/cardPage'
 import { checkoutpage } from '../PageObject/checkout'
 import { OrdersPage } from '../PageObject/orderHistroyPage'
-import fs from 'fs'
-const users = JSON.parse(
-    fs.readFileSync('./utils/userData.json', 'utf-8'))
 
-    test('Checkout with one product name', async ({ page }) => {
-        const user = users[2]
-        const login = new LoginPage(page)
-        // Navigation to Website
-        await login.goTo()
+test.use({ userIndex: 2 })
 
-        // Perform Login
-        await login.validLogin(user.email, user.password)
+    test('Checkout with one product name', async ({ page, login, user }) => {
 
         // Ensure navigation after login
         await expect(page.locator('.card-body b').first()).toContainText('ADIDAS ORIGINAL')
