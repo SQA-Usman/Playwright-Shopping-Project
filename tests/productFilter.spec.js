@@ -1,21 +1,8 @@
-import { expect, test } from "@playwright/test";
-import { LoginPage } from "../PageObject/loginpage";
-import fs from "fs";
+import { expect, test } from "../utils/fixtures";
 
-const users = JSON.parse(
-    fs.readFileSync("./utils/userData.json", "utf-8")
-);
+test.use({ userIndex: 3 });
 
-test("Filter", async ({ page }) => {
-
-    const user = users[3];
-    const loginPage = new LoginPage(page);
-
-    // Go to application
-    await loginPage.goTo();
-
-    // Login
-    await loginPage.validLogin(user.email, user.password);
+test("Filter", async ({ page, login }) => {
 
     // Ensure navigation after login
     await expect(page.locator(".card-body b").first())
